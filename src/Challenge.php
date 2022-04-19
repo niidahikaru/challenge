@@ -50,11 +50,7 @@ class Challenge
       $res = $this->client->request('PUT', $url, $options);
       $result = $this->serializeToArray($res->getBody());
 
-      if (isset($result['result']['url'])) {
-        break;
-      }
-
-      if ($result['total_diff'] > 500) {
+      if ($this->isSuccess($result)) {
         break;
       }
 
@@ -62,6 +58,11 @@ class Challenge
     }
 
     return $result;
+  }
+
+  private function isSuccess($result): bool
+  {
+    return isset($result['result']['url']);
   }
 
   private function serializeToArray(string $json): array
